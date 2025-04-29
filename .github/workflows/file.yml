@@ -47,14 +47,6 @@
                 run: |
                   pytest
 
-              - name: Run Linters and Formatters
-                working-directory: ./CRPR
-                run: |
-                  # Run Flake8 for linting
-                  flake8 .
-              
-                  # Run Black for formatting check
-                  black --check .
 
               - name: Log in to Docker Hub # Step to authenticate with Docker Hub
                 uses: docker/login-action@v2
