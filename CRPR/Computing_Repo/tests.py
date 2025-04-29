@@ -20,5 +20,5 @@ class BasicTests(TestCase):
         """
         Test that the login page returns a 200 status code.
         """
-        response = self.client.get(reverse('login'))  # Replace 'login' with your actual login URL name
+        response = self.client.get(reverse('login_page'))  # Replace 'login' with your actual login URL name
         self.assertEqual(response.status_code, 200)

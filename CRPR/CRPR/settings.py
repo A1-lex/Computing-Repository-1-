@@ -114,9 +114,18 @@ MIDDLEWARE = [
 ]
 # Only enable WhiteNoise in production
 if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+        # Add a 'default' entry for your default file storage (e.g., for media files)
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage", # Or your custom default storage
+        },
+    }
 
 ROOT_URLCONF = 'CRPR.urls'
+
 
 TEMPLATES = [
     {
@@ -189,14 +198,12 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / 'static'
 # For WhiteNoise compression and caching
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
