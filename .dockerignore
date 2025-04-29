@@ -6,6 +6,7 @@ __pycache__/
 # Ignore virtual environments
 venv/
 env/
+myvenv/
 
 # Ignore Django static and media files
 static/
@@ -23,3 +24,8 @@ docker-compose.yml
 *.idea/
 *.vscode/
 *.swp
+# Ignore pip-related files
+pip-log.txt
+# Ignore Node.js-related files
+node_modules/
+npm-debug.log
