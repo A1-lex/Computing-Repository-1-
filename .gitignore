@@ -1,0 +1,55 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+env/
+myvenv/
+
+# Django static and media files
+static/
+media/
+
+
+# Local environment files
+.env
+*.env
+*.local
+*.local.env
+*.local.json
+*.local.yaml
+
+
+# Docker-related files
+Dockerfile
+docker-compose.yml
+
+
+# IDE and editor files
+*.idea/
+*.vscode/
+*.swp
+
+# Node.js dependencies (if applicable)
+node_modules/
+
+# Coverage reports
+htmlcov/
+*.cover
+*.coverage
+*.log
+.coverage.*
+
+# Database files
+*.sqlite3
+*.db
+
+# Compiled files
+*.so
+*.dll
+*.dylib
+*.pyd
+*.egg-info/
+# Jupyter Notebook checkpoints
