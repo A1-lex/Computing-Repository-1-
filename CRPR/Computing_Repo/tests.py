@@ -8,7 +8,7 @@ class BasicTests(TestCase):
         """
         response = self.client.get(reverse('home'))  # Replace 'home' with your actual homepage URL name
         self.assertEqual(response.status_code, 200)
-
+cd
     def test_csrf_trusted_origins(self):
         """
         Test that CSRF trusted origins are correctly set in settings.
