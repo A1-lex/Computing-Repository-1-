@@ -36,6 +36,8 @@ EXPOSE 8000
 #    CMD curl -f http://localhost:8000/ || exit 1
 
 RUN chmod +x ./CRPR/manage.py
+RUN python ./CRPR/manage.py makemigrations
+RUN python ./CRPR/manage.py migrate
 
 # Run the application
 CMD ["python", "./CRPR/manage.py", "runserver", "0.0.0.0:8000"]
