@@ -6,68 +6,45 @@
             # Trigger on pushes to the main branch
             push:
               branches:
-                - main
+                - production
             # Trigger on pull requests targeting the main branch
             pull_request:
               branches:
-                - main
+                - production
 
           # Define the jobs to run
           jobs:
-            build-and-push: # Renamed from build-and-deploy, as this job focuses on building and pushing the image
-              # Run the job on the latest Ubuntu environment
-              runs-on: ubuntu-latest
-
-              # Steps for this job
-              steps:
-              - name: Checkout code # Step to get the code from the repository
-                uses: actions/checkout@v3
-
-              - name: Set up Python # Step to set up the Python environment
-                uses: actions/setup-python@v4
-                with:
-                  # Pin to a specific Python version for consistency
-                  python-version: '3.10' # Or '3.11', '3.12' etc.
-
-              - name: Cache pip dependencies # Step to cache the pip cache directory
-                uses: actions/cache@v3
-                with:
-                  path: ~/.cache/pip # The path to cache
-                  key: ${{ runner.os }}-python-${{ hashFiles('CRPR/requirements.txt') }} # Cache key based on OS, Python version, and requirements file hash
-                  restore-keys: | # Keys to use if the primary key is not found
-                    ${{ runner.os }}-python-
-
-              - name: Install dependencies # Step to install Python dependencies
-                run: |
-                  python -m pip install --upgrade pip # Ensure pip is up-to-date
-                  pip install -r CRPR/requirements.txt # Install dependencies from requirements.txt
-
-              # - name: Run tests
-              #   working-directory: ./CRPR
-              #   run: |
-              #     pytest
-
-
-              - name: Log in to Docker Hub # Step to authenticate with Docker Hub
+            build-and-deploy:
+            runs-on: ubuntu-latest
+          
+            steps:
+              - name: Checkout code
+                uses: actions/checkout@v2
+          
+              - name: Set up Docker Buildx
+                uses: docker/setup-buildx-action@v2
+          
+              - name: Log in to Docker Hub
                 uses: docker/login-action@v2
-                with:
-                  username: ${{ secrets.DOCKER_USERNAME }} # Use GitHub Secrets for username
-                  password: ${{ secrets.DOCKER_PASSWORD }} # Use GitHub Secrets for password
+                  with:
+                    username: ${{ secrets.DOCKER_USERNAME }}
+                    password: ${{ secrets.DOCKER_PASSWORD }}
 
-              - name: Build and push Docker image # Step to build and push the Docker image
+              - name: Build and push Docker image
+                uses: docker/build-push-action@v3
+                  with:
+                    context: ./
+                    push: true
+                    tags: ${{ secrets.DOCKER_USERNAME }}/crpr-web:${{ github.sha }}, ${{ secrets.DOCKER_USERNAME }}/crpr-web:latest
+          
+              - name: Set up SSH
                 run: |
-                  # Define the image name and tag
-                  # Using a fixed tag like v1.0
-                  IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/crpr-web # Use your image name
-                  IMAGE_TAG=v1.0 # Set the tag to v1.0
+                  mkdir -p ~/.ssh
+                  echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+                  chmod 600 ~/.ssh/id_ed25519
+                  ssh-keyscan ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
           
-                  # Build the Docker image
-                  # Use the build context (usually the root of the repo)
-                  docker build -t $IMAGE_NAME:$IMAGE_TAG .
-          
-                  # Push the Docker image to Docker Hub
-                  docker push $IMAGE_NAME:$IMAGE_TAG
-          
-                  # Optional: Also tag and push with 'latest' for convenience (use with caution)
-                  # docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
-                  # docker push $IMAGE_NAME:latest
+              - name: Deploy to production server
+                run:
+                  ssh ${{ secrets.SERVER_BOT }}@${{ secrets.SERVER_IP }} "~/deploy.sh"
+
