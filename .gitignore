@@ -31,5 +31,6 @@ build/
 # Database files
 *.sqlite3
 *.db
+
 ```
 CRPR/db.sqlite3

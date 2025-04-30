@@ -28,3 +28,7 @@ pip-log.txt
 # Ignore Node.js-related files
 node_modules/
 npm-debug.log
+
+**/*.sqlite3
+*.db
+*.sqlite

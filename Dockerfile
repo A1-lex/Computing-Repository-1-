@@ -37,6 +37,7 @@ EXPOSE 8000
 
 RUN chmod +x ./CRPR/manage.py
 RUN python ./CRPR/manage.py makemigrations
+RUN mkdir -p ./CRPR/data
 RUN python ./CRPR/manage.py migrate
 
 # Run the application
