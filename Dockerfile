@@ -35,8 +35,7 @@ EXPOSE 8000
 #HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 #    CMD curl -f http://localhost:8000/ || exit 1
 
-RUN chmod +x /app/CRPR/manage.py
-RUN cd CRPR
+RUN chmod +x ./CRPR/manage.py
 
 # Run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "./CRPR/manage.py", "runserver", "0.0.0.0:8000"]
